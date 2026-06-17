@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calla - Contact Us</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+--pink:#e8607a;--cream:#fdf6f0;--dark:#1a0a10;--text:#2c1a20;--muted:rgba(44,26,32,.65);--border:rgba(0,0,0,.09);
+--font-d:'Cormorant Garamond',serif;--font-b:'Jost',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-b);color:var(--text);background:#fff}
+nav{background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(232,96,122,.12);padding:0 6%;display:flex;justify-content:space-between;align-items:center;height:80px;position:sticky;top:0}
+.logo-name{font-family:var(--font-d);font-size:36px;color:var(--pink);font-style:italic;text-decoration:none}
+.nav-links{display:flex;list-style:none;gap:2rem}
+.nav-links a{text-decoration:none;color:var(--text);text-transform:uppercase;font-size:12px;letter-spacing:3px}
+.nav-links .active{color:var(--pink)}
+.hero{
+    height:40vh;
+
+    background:
+        linear-gradient(
+            rgba(0,0,0,.45),
+            rgba(0,0,0,.45)
+        ),
+        url('https://images.unsplash.com/photo-1582735689369-4fe89db7114c?q=80&w=1600&auto=format&fit=crop');
+
+    background-size:cover;
+    background-position:center;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:#fff;
+}
+.hero-content p{
+    letter-spacing:4px;
+    text-transform:uppercase;
+    margin-bottom:10px;
+}
+
+.hero-content h1{
+    font-family:var(--font-d);
+    font-size:4.5rem;
+    font-weight:300;
+    margin-bottom:15px;
+}
+
+.hero-content span{
+    font-size:1.1rem;
+    opacity:.9;
+}
+
+.team-photo{
+    max-width:1200px;
+    margin:-90px auto 60px;
+    padding:0 6%;
+    position:relative;
+    z-index:5;
+}
+
+.team-photo img{
+    width:100%;
+    display:block;
+    border-radius:24px;
+    border:6px solid #fff;
+    box-shadow:0 25px 60px rgba(0,0,0,.18);
+}
+
+.team-intro{
+    max-width:800px;
+    margin:0 auto 70px;
+    text-align:center;
+    padding:0 20px;
+}
+
+.team-intro h2{
+    font-family:var(--font-d);
+    font-size:3rem;
+    font-weight:300;
+    margin-bottom:20px;
+}
+
+.team-intro p{
+    line-height:1.8;
+    color:var(--muted);
+}
+
+@media(max-width:900px){
+
+    .hero-content h1{
+        font-size:3rem;
+    }
+
+    .team-photo{
+        margin:-40px auto 40px;
+    }
+
+    .team-intro h2{
+        font-size:2.2rem;
+    }
+}
+.hero h1{font-family:var(--font-d);font-size:4.5rem;font-weight:300}
+.hero p{letter-spacing:4px;text-transform:uppercase}
+.section{padding:80px 6%}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:25px}
+.card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:35px;text-align:center}
+.card h3{margin:10px 0;color:var(--pink)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:35px}
+.form-box,.map-box,.faq details,.newsletter{background:#fff;border:1px solid var(--border);border-radius:20px}
+.form-box{padding:35px}
+input,textarea{width:100%;padding:15px;border:1px solid #ddd;border-radius:12px;margin-bottom:15px}
+button{background:var(--pink);color:#fff;border:none;padding:15px 30px;border-radius:999px;cursor:pointer}
+.map-box iframe{width:100%;height:100%;min-height:500px;border:none;border-radius:20px}
+.section-title{text-align:center;margin-bottom:40px}
+.section-title h2{font-family:var(--font-d);font-size:3rem;font-weight:300}
+.faq{max-width:900px;margin:auto}
+.faq details{padding:20px;margin-bottom:15px}
+.newsletter{text-align:center;padding:50px;background:var(--cream)}
+.newsletter h2{font-family:var(--font-d);font-size:2.5rem}
+.newsletter form{margin-top:20px}
+.newsletter input{max-width:350px}
+footer{background:#110508;color:#fff;text-align:center;padding:40px}
+@media(max-width:900px){.contact-grid{grid-template-columns:1fr}.nav-links{display:none}.hero h1{font-size:3rem}}
+.logo{
+    text-decoration:none;
+}
+
+.logo-name{
+    font-family:var(--font-d);
+    font-weight:600;
+    font-size:36px;
+    letter-spacing:4px;
+    color:var(--pink);
+    font-style:italic;
+}
+.team-photo{
+    max-width:1200px;
+    margin:-60px auto 80px;
+    padding:0 6%;
+    position:relative;
+    z-index:10;
+}
+
+.team-photo img{
+    width:100%;
+    display:block;
+    border-radius:24px;
+    box-shadow:0 20px 50px rgba(0,0,0,.15);
+    border:6px solid #fff;
+}
+.team-section{
+    max-width:1200px;
+    margin:80px auto;
+    padding:0 6%;
+
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:60px;
+
+    align-items:center;
+}
+
+.team-image img{
+    width:100%;
+    display:block;
+
+    border-radius:24px;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.12);
+}
+
+.team-label{
+    color:var(--pink);
+
+    text-transform:uppercase;
+
+    letter-spacing:4px;
+
+    margin-bottom:15px;
+
+    font-size:.85rem;
+}
+
+.team-content h2{
+    font-family:var(--font-d);
+
+    font-size:3.8rem;
+
+    font-weight:300;
+
+    line-height:1.1;
+
+    margin-bottom:25px;
+
+    color:var(--text);
+}
+
+.team-content p{
+    color:var(--muted);
+
+    line-height:1.9;
+
+    margin-bottom:20px;
+}
+
+@media(max-width:900px){
+
+    .team-section{
+        grid-template-columns:1fr;
+        gap:35px;
+    }
+
+    .team-content h2{
+        font-size:2.5rem;
+    }
+    
+}
+.team-showcase{
+    max-width:1200px;
+    margin:80px auto;
+    padding:0 6%;
+
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:80px;
+
+    align-items:center;
+
+    position:relative;
+}
+
+.team-gallery{
+    position:relative;
+    min-height:600px;
+}
+
+/* Decorative pink circle */
+.blob{
+    position:absolute;
+    width:300px;
+    height:300px;
+
+    background:#f8dce4;
+
+    border-radius:50%;
+
+    left:-50px;
+    top:70px;
+
+    opacity:.7;
+}
+
+/* Photos */
+.photo{
+    position:absolute;
+
+    width:85%;
+
+    border-radius:25px;
+
+    border:8px solid #fff;
+
+    box-shadow:0 20px 40px rgba(0,0,0,.12);
+}
+
+.photo-top{
+    top:0;
+    left:0;
+    transform:rotate(-3deg);
+}
+
+.photo-bottom{
+    bottom:0;
+    right:0;
+    transform:rotate(4deg);
+}
+
+/* Pink dots */
+.dots{
+    position:absolute;
+
+    width:120px;
+    height:120px;
+
+    left:-30px;
+    bottom:100px;
+
+    background-image:radial-gradient(
+        #ef8296 2px,
+        transparent 2px
+    );
+
+    background-size:20px 20px;
+}
+
+/* Decorative icon */
+.leaf{
+    position:absolute;
+    left:-20px;
+    bottom:-10px;
+
+    font-size:80px;
+
+    color:#ef8296;
+
+    opacity:.5;
+}
+
+/* Text */
+.team-label{
+    color:#ef8296;
+
+    letter-spacing:4px;
+
+    font-size:.9rem;
+
+    margin-bottom:20px;
+}
+
+.team-info h2{
+    font-family:'Cormorant Garamond', serif;
+
+    font-size:4rem;
+
+    font-weight:300;
+
+    line-height:1.1;
+
+    margin-bottom:20px;
+}
+
+.line{
+    width:60px;
+    height:4px;
+
+    background:#ef8296;
+
+    margin-bottom:30px;
+}
+
+.team-info p{
+    color:#555;
+
+    line-height:1.9;
+
+    margin-bottom:20px;
+}
+</style>
+</head>
+<body>
+
+<nav>
+
+    <a href="index.html" class="logo">
+        <span class="logo-name">✿ Calla</span>
+    </a>
+
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="shop.html">Products</a></li>
+        <li><a href="media.html">Media</a></li>
+        <li><a href="feedback.html">Feedback</a></li>
+        <li><a class="active" href="contact.html">Contact Us</a></li>
+    </ul>
+
+</nav>
+
+<section class="team-showcase">
+
+    <div class="team-gallery">
+
+        <div class="blob"></div>
+
+        <img src="assets/images/cm6.jpg"
+             alt="Team Photo"
+             class="photo photo-top">
+
+        <img src="assets/images/cm7.jpg"
+             alt="Team Photo"
+             class="photo photo-bottom">
+
+        <div class="dots"></div>
+
+        <div class="leaf">
+            ✿
+        </div>
+
+    </div>
+
+    <div class="team-info">
+
+        <p class="team-label">MEET THE TEAM</p>
+
+        <h2>
+            The Students Behind<br>
+            the Calla Project
+        </h2>
+
+        <div class="line"></div>
+
+        <p>
+            Calla is a conceptual detergent brand website developed
+            as part of our academic project. Our team customized and
+            enhanced the website's design, content, and user
+            experience to align with the project's objectives.
+        </p>
+
+        <p>
+            Through collaboration, creativity, and dedication,
+            we worked together to transform ideas into a modern
+            and user-friendly website.
+        </p>
+
+        <p>
+            This project allowed us to grow our skills in
+            web development, UI/UX design, content creation,
+            and teamwork.
+        </p>
+
+    </div>
+
+</section>
+<section class="section">
+<div class="cards">
+<div class="card"><h3>📞 Phone</h3><p>0917-123-4567</p></div>
+<div class="card"><h3>✉️ Email</h3><p>hello@callaph.com</p></div>
+<div class="card"><h3>📍 Address</h3><p>Quezon City, Philippines</p></div>
+</div>
+</section>
+
+<section class="section">
+<div class="contact-grid">
+<div class="form-box">
+<h2 style="font-family:var(--font-d);font-weight:300;margin-bottom:20px;">Send Us A Message</h2>
+<form onsubmit="event.preventDefault();alert('Thank you for contacting Calla!');this.reset();">
+<input type="text" placeholder="Full Name" required>
+<input type="email" placeholder="Email Address" required>
+<input type="text" placeholder="Subject" required>
+<textarea rows="6" placeholder="Message" required></textarea>
+<button type="submit">Send Message</button>
+</form>
+</div>
+<div class="map-box">
+<iframe src="https://maps.google.com/maps?q=Quezon%20City&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+</div>
+</div>
+</section>
+
+<section class="section faq">
+<div class="section-title"><h2>Frequently Asked Questions</h2></div>
+<details><summary>Where can I buy Calla products?</summary><p>Available in major supermarkets and online stores.</p></details>
+<details><summary>Do you offer wholesale?</summary><p>Yes. Contact us for distributor and wholesale inquiries.</p></details>
+<details><summary>How long does delivery take?</summary><p>Usually 3–7 business days.</p></details>
+</section>
+
+<section class="section">
+<div class="newsletter">
+<h2>Stay Connected</h2>
+<p>Get updates about Calla products and promotions.</p>
+<form>
+<input type="email" placeholder="Enter your email">
+<button>Subscribe</button>
+</form>
+</div>
+</section>
+
+<footer>
+✿ Calla<br><br>
+Feel Good From Sampayan To Sundown<br>
+© 2026 Calla Detergent
+</footer>
+
+</body>
+</html>

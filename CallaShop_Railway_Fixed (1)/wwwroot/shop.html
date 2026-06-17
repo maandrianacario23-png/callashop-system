@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+  <title>Calla — Products</title>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --pink:       #e8607a;
+      --pink-light: #f2a0b0;
+      --cream:      #fdf6f0;
+      --dark:       #1a0a10;
+      --text:       #2c1a20;
+      --muted:      rgba(44,26,32,0.55);
+      --border:     rgba(0,0,0,0.09);
+      --white:      #ffffff;
+      --font-d: 'Cormorant Garamond', Georgia, serif;
+      --font-b: 'Jost', sans-serif;
+    }
+    body { font-family:var(--font-b); background:var(--cream); color:var(--text); min-height:100vh; }
+
+    
+    nav { background:var(--white); border-bottom:1px solid var(--border); padding:0 6%; display:flex; align-items:center; justify-content:space-between; height:70px; position:sticky; top:0; z-index:99; }
+    .logo-name { font-family:var(--font-d); font-weight:600; font-size:22px; letter-spacing:4px; color:var(--pink); text-decoration:none; font-style:italic; }
+    .nav-links { display:flex; list-style:none; gap:2.5rem; }
+    .nav-links a { text-decoration:none; font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:var(--text); opacity:0.6; transition:opacity .2s; }
+    .nav-links a:hover, .nav-links a.active { opacity:1; }
+    .cart-btn { position:absolute; left:50%; transform:translateX(-50%); background:var(--dark); color:var(--white); border:none; padding:10px 22px; border-radius:30px; font-family:var(--font-b); font-size:11px; letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:background .2s; }
+    .cart-btn:hover { background:var(--pink); }
+    .cart-count { position:absolute; top:-6px; right:-6px; background:var(--pink); color:var(--white); width:18px; height:18px; border-radius:50%; font-size:10px; display:flex; align-items:center; justify-content:center; font-weight:500; }
+
+   
+    .page-header { background:var(--dark); padding:50px 6%; display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+    .page-header h1 { font-family:var(--font-d); font-size:clamp(2rem,4vw,3.2rem); font-weight:300; color:var(--white); line-height:1; }
+    .page-header h1 em { font-style:italic; color:var(--pink-light); font-size:.5em; display:block; letter-spacing:.15em; margin-bottom:6px; }
+    .result-count { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.4); }
+
+   
+    .toolbar { background:var(--white); border-bottom:1px solid var(--border); padding:14px 6%; display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .search-wrap { flex:1 1 240px; position:relative; }
+    .search-wrap input { width:100%; background:var(--cream); border:1px solid var(--border); padding:10px 16px 10px 38px; font-family:var(--font-b); font-size:13px; color:var(--text); outline:none; border-radius:30px; transition:border-color .2s; }
+    .search-wrap input::placeholder { color:rgba(0,0,0,.3); }
+    .search-wrap input:focus { border-color:var(--pink); }
+    .search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--pink); font-size:13px; pointer-events:none; }
+    .filter-group { display:flex; gap:8px; flex-wrap:wrap; }
+    .filter-btn { background:var(--cream); border:1px solid var(--border); padding:8px 18px; border-radius:30px; font-family:var(--font-b); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); cursor:pointer; transition:all .2s; }
+    .filter-btn:hover, .filter-btn.active { background:var(--pink); border-color:var(--pink); color:var(--white); }
+    .sort-select { background:var(--cream); border:1px solid var(--border); padding:8px 14px; border-radius:30px; font-family:var(--font-b); font-size:11px; color:var(--muted); cursor:pointer; outline:none; }
+
+   
+    .shop-body { padding:40px 6% 80px; }
+    .product-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:24px; }
+
+   
+    .product-card { background:var(--white); border:1px solid var(--border); border-radius:16px; overflow:hidden; display:flex; flex-direction:column; transition:box-shadow .3s,transform .3s; }
+    .product-card:hover { box-shadow:0 14px 40px rgba(232,96,122,.14); transform:translateY(-4px); }
+    .card-img { width:100%; aspect-ratio:4/3; background:var(--cream); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+    .card-img img { width:100%; height:100%; object-fit:contain; padding:16px; transition:transform .3s; }
+    .product-card:hover .card-img img { transform:scale(1.05); }
+    .card-img-fallback { position:absolute; inset:0; display:none; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:rgba(0,0,0,.2); font-size:2.5rem; }
+    .card-badge { position:absolute; top:12px; left:12px; color:var(--white); font-size:9px; letter-spacing:1.5px; text-transform:uppercase; padding:3px 10px; border-radius:30px; font-family:var(--font-b); background:var(--pink); }
+    .card-badge.new        { background:#2a7a3a; }
+    .card-badge.bestseller { background:#8b6914; }
+    .card-badge.special    { background:#1a4a8a; }
+    .card-body { padding:18px 20px 12px; flex:1; display:flex; flex-direction:column; gap:4px; }
+    .card-cat  { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--pink); }
+    .card-name { font-family:var(--font-d); font-size:1.3rem; font-weight:600; color:var(--dark); }
+    .card-desc { font-size:12px; line-height:1.7; color:var(--muted); margin-top:4px; }
+    .card-scent { font-size:11px; color:var(--pink); opacity:.8; margin-top:2px; }
+
+
+    .size-selector { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+    .size-btn { background:var(--cream); border:1px solid var(--border); color:var(--muted); font-family:var(--font-b); font-size:10px; letter-spacing:1px; text-transform:uppercase; padding:4px 10px; border-radius:20px; cursor:pointer; transition:all .2s; }
+    .size-btn:hover { border-color:var(--pink); color:var(--pink); }
+    .size-btn.active { background:var(--pink); border-color:var(--pink); color:var(--white); }
+
+    .card-footer { padding:12px 20px 18px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .card-price { font-family:var(--font-d); font-size:1.3rem; font-weight:600; color:var(--dark); }
+    .add-btn { background:var(--pink); color:var(--white); border:none; padding:9px 18px; border-radius:30px; font-family:var(--font-b); font-size:11px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:background .2s; }
+    .add-btn:hover { background:#d44f68; }
+    .add-btn.added { background:#999; }
+
+   
+    .empty-state { grid-column:1/-1; text-align:center; padding:80px 20px; color:var(--muted); }
+    .empty-state .icon { font-size:3rem; margin-bottom:16px; }
+    .empty-state p { font-family:var(--font-d); font-size:1.3rem; font-style:italic; }
+
+    
+    .overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200; opacity:0; pointer-events:none; transition:opacity .3s; }
+    .overlay.open { opacity:1; pointer-events:all; }
+    .drawer { position:fixed; right:0; top:0; bottom:0; width:min(420px,100vw); background:var(--white); border-left:1px solid var(--border); z-index:201; display:flex; flex-direction:column; transform:translateX(100%); transition:transform .35s cubic-bezier(.4,0,.2,1); }
+    .drawer.open { transform:translateX(0); }
+    .drawer-head { padding:24px 28px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .drawer-title { font-family:var(--font-d); font-size:1.5rem; font-weight:300; color:var(--dark); }
+    .drawer-close { background:none; border:none; color:var(--muted); font-size:1.1rem; cursor:pointer; transition:color .2s; }
+    .drawer-close:hover { color:var(--pink); }
+    .drawer-items { flex:1; overflow-y:auto; padding:20px 28px; display:flex; flex-direction:column; gap:18px; }
+    .cart-item { display:flex; gap:14px; align-items:flex-start; padding-bottom:18px; border-bottom:1px solid var(--border); }
+    .ci-icon { width:54px; height:54px; flex-shrink:0; background:var(--cream); border:1px solid var(--border); border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+    .ci-icon img { width:100%; height:100%; object-fit:contain; padding:4px; }
+    .ci-info { flex:1; }
+    .ci-name { font-family:var(--font-d); font-size:1rem; font-weight:600; color:var(--dark); }
+    .ci-cat  { font-size:10px; letter-spacing:1.5px; color:var(--pink); margin-bottom:8px; text-transform:uppercase; }
+    .ci-qty  { display:flex; align-items:center; gap:10px; }
+    .qty-btn { background:var(--cream); border:1px solid var(--border); width:26px; height:26px; border-radius:50%; cursor:pointer; font-size:1rem; color:var(--dark); display:flex; align-items:center; justify-content:center; transition:all .2s; }
+    .qty-btn:hover { background:var(--pink); border-color:var(--pink); color:var(--white); }
+    .qty-num { font-size:.85rem; min-width:20px; text-align:center; font-weight:500; }
+    .ci-price { font-family:var(--font-d); font-size:1.1rem; font-weight:600; color:var(--pink); white-space:nowrap; }
+    .ci-remove { background:none; border:none; color:var(--muted); font-size:10px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; padding:0; margin-top:6px; transition:color .2s; }
+    .ci-remove:hover { color:var(--pink); }
+    .cart-empty-msg { text-align:center; padding:60px 20px; font-family:var(--font-d); font-size:1.1rem; font-style:italic; color:var(--muted); line-height:1.8; }
+    .drawer-foot { padding:20px 28px 32px; border-top:1px solid var(--border); }
+    .subtotal-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    .subtotal-lbl { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+    .subtotal-val { font-family:var(--font-d); font-size:1.8rem; font-weight:600; color:var(--dark); }
+    .order-btn { width:100%; background:var(--pink); color:var(--white); border:none; padding:14px; border-radius:30px; font-family:var(--font-b); font-size:12px; letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:background .2s; }
+    .order-btn:hover { background:#d44f68; }
+    .order-btn:disabled { background:rgba(0,0,0,.1); color:rgba(0,0,0,.3); cursor:not-allowed; }
+
+    
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:300; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; backdrop-filter:blur(4px); }
+    .modal-overlay.open { opacity:1; pointer-events:all; }
+    .modal { background:var(--white); border:1px solid var(--border); width:min(500px,92vw); max-height:90vh; overflow-y:auto; padding:40px; border-radius:20px; position:relative; }
+    .modal-close { position:absolute; top:16px; right:20px; background:none; border:none; font-size:1.1rem; cursor:pointer; color:var(--muted); transition:color .2s; }
+    .modal-close:hover { color:var(--pink); }
+    .modal h2 { font-family:var(--font-d); font-size:1.9rem; font-weight:300; color:var(--dark); margin-bottom:4px; }
+    .modal .sub { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--pink); opacity:.7; margin-bottom:24px; }
+    .order-summary { background:var(--cream); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:24px; }
+    .order-summary-row { display:flex; justify-content:space-between; padding:5px 0; font-size:13px; color:var(--muted); }
+    .order-summary-row.total { border-top:1px solid var(--border); margin-top:8px; padding-top:12px; font-family:var(--font-d); font-size:1.1rem; font-weight:600; color:var(--dark); }
+    .form-group { margin-bottom:14px; }
+    .form-group label { display:block; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+    .form-group input, .form-group select, .form-group textarea { width:100%; background:var(--cream); border:1px solid var(--border); border-radius:10px; padding:11px 14px; font-family:var(--font-b); font-size:13px; color:var(--dark); outline:none; transition:border-color .2s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--pink); }
+    .form-group input::placeholder, .form-group textarea::placeholder { color:rgba(0,0,0,.25); }
+    .form-group textarea { resize:vertical; min-height:70px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .place-btn { width:100%; margin-top:8px; background:var(--pink); color:var(--white); border:none; padding:14px; border-radius:30px; font-family:var(--font-b); font-size:12px; letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:background .2s; }
+    .place-btn:hover { background:#d44f68; }
+
+   
+    .success-view { text-align:center; padding:20px 0; display:none; }
+    .success-view.show { display:block; }
+    .success-icon { font-size:3rem; margin-bottom:16px; display:inline-block; color:var(--pink); }
+    .success-view h3 { font-family:var(--font-d); font-size:1.9rem; font-weight:300; color:var(--dark); margin-bottom:10px; }
+    .success-view p { font-size:13px; color:var(--muted); line-height:1.8; }
+    .success-view .order-id { font-family:var(--font-d); font-size:1.1rem; color:var(--pink); margin-top:14px; letter-spacing:.1em; }
+
+
+    .toast { position:fixed; bottom:32px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--dark); color:var(--white); padding:11px 26px; border-radius:30px; font-size:12px; letter-spacing:1px; z-index:400; opacity:0; transition:all .3s; white-space:nowrap; pointer-events:none; }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+   
+    footer { background:#110508; padding:36px 6%; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-top:40px; }
+    .foot-logo { font-family:var(--font-b); font-weight:500; font-size:14px; letter-spacing:6px; text-transform:uppercase; color:var(--white); }
+    .foot-copy { font-size:11px; color:rgba(255,255,255,.25); }
+
+    @media(max-width:640px) {
+      .nav-links { display:none; }
+      .form-row { grid-template-columns:1fr; }
+      .modal { padding:28px 20px; }
+      .shop-body { padding:28px 4% 60px; }
+    }
+  </style>
+</head>
+<body>
+
+
+<nav>
+  <a href="index.html" class="logo-name">✿ Calla</a>
+ <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Products</a></li>
+    <li><a href="media.html">Media</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
+    <li><a href="contact.html">Contact Us</a></li>
+</ul>
+  <button class="cart-btn" id="cartBtn">
+    ✿ Cart <span class="cart-count" id="cartCount">0</span>
+  </button>
+</nav>
+
+
+<div class="page-header">
+  <h1><em>Calla Collection</em>OUR PRODUCTS</h1>
+  <span class="result-count" id="resultCount"></span>
+</div>
+
+
+<div class="toolbar">
+  <div class="search-wrap">
+    <span class="search-icon">✦</span>
+    <input type="text" id="searchInput" placeholder="Search products…" />
+  </div>
+  <div class="filter-group" id="filterGroup">
+    <button class="filter-btn active" data-cat="all">All</button>
+    <button class="filter-btn" data-cat="powder">Powder</button>
+    <button class="filter-btn" data-cat="bar">Bar</button>
+    <button class="filter-btn" data-cat="liquid">Liquid</button>
+  </div>
+  <select class="sort-select" id="sortSelect">
+    <option value="default">Sort: Featured</option>
+    <option value="price-asc">Price: Low to High</option>
+    <option value="price-desc">Price: High to Low</option>
+    <option value="name-asc">Name: A–Z</option>
+  </select>
+</div>
+
+
+<div class="shop-body">
+  <div class="product-grid" id="productGrid"></div>
+</div>
+
+
+<footer style="flex-direction:column; text-align:center; gap:20px; padding:40px 6%; display:flex; align-items:center; justify-content:center;">
+  <span class="foot-logo">✿ Calla</span>
+  <div style="display:flex; gap:20px; align-items:center; justify-content:center;">
+    <a href="https://www.facebook.com/calladetergent/" target="_blank" title="Facebook" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.08); transition:background .2s;" onmouseover="this.style.background='#1877f2'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+    </a>
+    <a href="#" title="Instagram" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.08); transition:background .2s;" onmouseover="this.style.background='#e1306c'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+    </a>
+    <a href="https://www.tiktok.com/@calladetergent" target="_blank" title="TikTok" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.08); transition:background .2s;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+    </a>
+    <a href="https://www.youtube.com/channel/UCK6Rw9IgQ3IiVwT3MNxAAdQ" target="_blank" title="YouTube" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.08); transition:background .2s;" onmouseover="this.style.background='#ff0000'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.95C5.12 20 12 20 12 20s6.88 0 8.59-.47a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#110508"/></svg>
+    </a>
+  </div>
+  <span class="foot-copy">© 2026 Calla Detergent. All rights reserved.</span>
+</footer>
+
+
+<div class="overlay" id="overlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <span class="drawer-title">Your Cart</span>
+    <button class="drawer-close" id="drawerClose">✕</button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot">
+    <div class="subtotal-row">
+      <span class="subtotal-lbl">Subtotal</span>
+      <span class="subtotal-val" id="subtotalVal">₱0.00</span>
+    </div>
+    <button class="order-btn" id="orderBtn" disabled>Place Order</button>
+  </div>
+</div>
+
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div id="formView">
+      <h2>Order Details</h2>
+      <p class="sub">Fill in your information below</p>
+      <div class="order-summary" id="orderSummary"></div>
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" id="fname" placeholder="Maria" /></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="lname" placeholder="Santos" /></div>
+      </div>
+      <div class="form-group"><label>Contact Number</label><input type="tel" id="phone" placeholder="09XX XXX XXXX" /></div>
+      <div class="form-group"><label>Delivery Address</label><textarea id="address" placeholder="House No., Street, Barangay, City"></textarea></div>
+      <div class="form-group">
+        <label>Payment Method</label>
+        <select id="payment">
+          <option value="cod">Cash on Delivery</option>
+          <option value="gcash">GCash</option>
+          <option value="maya">Maya</option>
+          <option value="bank">Bank Transfer</option>
+        </select>
+      </div>
+      <button class="place-btn" id="placeBtn">Confirm Order</button>
+    </div>
+    <div class="success-view" id="successView">
+      <span class="success-icon">✿</span>
+      <h3>Order Placed!</h3>
+      <p>Salamat sa iyong tiwala.<br>Ibibigay namin ang pinakamabangong karanasan.</p>
+      <p class="order-id" id="orderId"></p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const PRODUCTS = [
+    { name:'Floral Fresh', cat:'powder', scent:'Jasmine & Lily of the Valley', desc:'Feel good pa rin from sampayan to sundown with the fresh scent of Jasmine and Lily of the Valley.', img:'./assets/images/Floral.png',
+      sizes:[{id:1,variant:'1.6kg Powder',grams:1600,price:155.00,badge:'bestseller',badgeLbl:'BEST',img:'./assets/images/floral1.6kg.png'},{id:2,variant:'800g Powder',grams:800,price:79.10,badge:'new',badgeLbl:'NEW',img:'./assets/images/floral800.webp'},{id:3,variant:'400g Powder',grams:400,price:39.55,badge:'new',badgeLbl:'NEW',img:'./assets/images/floral400.webp'},{id:4,variant:'100g Powder',grams:100,price:10.40,badge:'new',badgeLbl:'NEW'},{id:5,variant:'45g Powder',grams:45,price:4.90,badge:'new',badgeLbl:'NEW',img:'./assets/images/floral45.webp'}] },
+    { name:'Floral Fresh', cat:'bar', scent:'Jasmine & Lily of the Valley', desc:'Traditional pero epektibo. Para sa matitinding mantsa na may bango ng Jasmine.', img:'./assets/images/floralBar.png',  
+      sizes:[{id:6,variant:'390g Bar',grams:390,price:21.00,badge:'',badgeLbl:''}] },
+    { name:'Summer Fresh', cat:'powder', scent:'Citrus & Fruity Notes', desc:'Feel good pa rin from sampayan to sundown with the refreshing burst of Citrus and Fruity Notes.', img:'./assets/images/Yellow.png',
+      sizes:[{id:7,variant:'1.6kg Powder',grams:1600,price:155.00,badge:'',badgeLbl:'',img:'./assets/images/summer1.6.png'},{id:8,variant:'800g Powder',grams:800,price:79.10,badge:'',badgeLbl:'',img:'./assets/images/summer800.png'},{id:9,variant:'100g Powder',grams:100,price:10.40,badge:'',badgeLbl:'',img:'./assets/images/summer100.png'},{id:10,variant:'45g Powder',grams:45,price:4.90,badge:'',badgeLbl:'',img:'./assets/images/summer45.png'}] },
+    { name:'Summer Fresh', cat:'bar', scent:'Citrus & Fruity Notes', desc:'Traditional pero epektibo. May refreshing Citrus na pampabango ng damit.', img:'./assets/images/Summer Fresh.jpg',
+      sizes:[{id:11,variant:'390g Bar',grams:390,price:22.00,badge:'',badgeLbl:''}] },
+    { name:'Rose Garden', cat:'powder', scent:'Rose & Orange Blossoms', desc:'Feel good pa rin from sampayan to sundown with the relaxing scent of Rose and Orange Blossoms.', img:'./assets/images/Rose.png',
+      sizes:[{id:12,variant:'1.6kg Powder',grams:1600,price:155.00,badge:'new',badgeLbl:'NEW',img:'./assets/images/rose1.6.png'},{id:13,variant:'800g Powder',grams:800,price:79.10,badge:'',badgeLbl:'',img:'./assets/images/rose800.webp'},{id:14,variant:'100g Powder',grams:100,price:10.40,badge:'',badgeLbl:'',img:'./assets/images/rose100.png'},{id:15,variant:'45g Powder',grams:45,price:4.90,badge:'',badgeLbl:'',img:'./assets/images/rose45.webp'}] },
+    { name:'Rose Garden', cat:'bar', scent:'Rose & Orange Blossoms', desc:'Traditional pero epektibo. May halong Rose at Orange Blossom na lasting ang bango.', img:'./assets/images/Rose Garden Bar.jpg',
+      sizes:[{id:16,variant:'390g Bar',grams:390,price:22.00,badge:'',badgeLbl:''}] },
+    { name:'Blue', cat:'bar', scent:'Cool & Refreshing + Extra Whitening', desc:'Cool and refreshing fragrance, at tina para sa extra whitening ng damit.', img:'./assets/images/blue.png',
+      sizes:[{id:17,variant:'390g Bar',grams:390,price:19.80,badge:'special',badgeLbl:'SPECIAL'}] },
+    { name:'Kalamansi', cat:'powder', scent:'Zesty & Vibrant', desc:'Feel good pa rin from sampayan to sundown with the zesty and vibrant fragrance of Kalamansi.', img:'./assets/images/Kalamansi.png',
+      sizes:[{id:18,variant:'1.6kg Powder',grams:1600,price:155.00,badge:'new',badgeLbl:'NEW',img:'./assets/images/mansi1.6.png'},{id:19,variant:'800g Powder',grams:800,price:79.10,badge:'new',badgeLbl:'NEW',img:'./assets/images/mansi800.png'},{id:20,variant:'100g Powder',grams:100,price:10.40,badge:'new',badgeLbl:'NEW',img:'./assets/images/mansi100.png'},{id:21,variant:'45g Powder',grams:45,price:4.90,badge:'',badgeLbl:'',img:'./assets/images/mansi45.png'}] },
+    { name:'Floral Fresh Liquid Detergent', cat:'liquid', scent:'Jasmine & Lily of the Valley', desc:'Bring the beauty of blooming flowers to your laundry routine. Calla Floral Fresh Liquid Detergent effectively removes dirt and odors while surrounding your clothes with a refreshing floral scent that lasts throughout the day.', img:'./assets/images/FFresh LD.png',
+      sizes:[{id:22,variant:'3.5L Liquid',grams:3000,price:299.00,badge:'new',badgeLbl:'NEW'},{id:23,variant:'1L Liquid',grams:1000,price:199.00,badge:'',badgeLbl:''},{id:24,variant:'500ml Liquid',grams:500,price:99.00,badge:'',badgeLbl:''}] },
+    { name:'Summer Fresh Liquid Detergent', cat:'liquid', scent:'Citrus & Fruity Notes', desc:'Enjoy the refreshing scent of summer in every wash. Calla Summer Fresh Liquid Detergent effectively removes dirt and odors, leaving clothes clean, vibrant, and smelling fresh all day long.', img:'./assets/images/Summer Fresh LD.png',
+      sizes:[{id:25,variant:'3.5L Liquid',grams:3000,price:299.00,badge:'new',badgeLbl:'NEW'},{id:26,variant:'1L Liquid',grams:1000,price:199.00,badge:'',badgeLbl:''},{id:27,variant:'500ml Liquid',grams:500,price:99.00,badge:'',badgeLbl:''}] },
+    { name:'Kalamansi Liquid Detergent', cat:'liquid', scent:'Zesty & Vibrant', desc:'Experience the natural freshness of Calla Kalamansi Liquid Detergent. Infused with the invigorating scent of kalamansi, it deeply cleans fabrics, fights unwanted odors, and leaves your laundry smelling fresh from wash day to sundown.', img:'./assets/images/Kalamansi LD.png',
+      sizes:[{id:28,variant:'3.5L Liquid',grams:3000,price:299.00,badge:'new',badgeLbl:'NEW'},{id:29,variant:'1L Liquid',grams:1000,price:199.00,badge:'',badgeLbl:''},{id:30,variant:'500ml Liquid',grams:500,price:99.00,badge:'',badgeLbl:''}] },
+    { name:'Rose Garden Liquid Detergent', cat:'liquid', scent:'Rose & Orange Blossoms', desc:'Surround your laundry with the luxurious scent of a blooming rose garden. Calla Rose Garden Liquid Detergent effectively removes dirt and stains while providing long-lasting floral freshness that keeps clothes smelling delightful throughout the day.', img:'./assets/images/Rose Garden LD.png',
+      sizes:[{id:31,variant:'3.5L Liquid',grams:3000,price:299.00,badge:'new',badgeLbl:'NEW'},{id:32,variant:'1L Liquid',grams:1000,price:199.00,badge:'',badgeLbl:''},{id:33,variant:'500ml Liquid',grams:500,price:99.00,badge:'',badgeLbl:''}] },
+  ];
+
+  const selectedSize = {};
+  PRODUCTS.forEach((_,i) => { selectedSize[i] = 0; });
+  let cart=[], activeFilter='all', searchTerm='', sortMode='default';
+
+  function getFiltered() {
+    let list = PRODUCTS.map((p,i) => ({...p,_idx:i}));
+    if (activeFilter !== 'all') list = list.filter(p => p.cat === activeFilter);
+    if (searchTerm) list = list.filter(p => p.name.toLowerCase().includes(searchTerm) || p.scent.toLowerCase().includes(searchTerm) || p.sizes.some(s => s.variant.toLowerCase().includes(searchTerm)));
+    if (sortMode==='price-asc')  list.sort((a,b) => a.sizes[selectedSize[a._idx]].price - b.sizes[selectedSize[b._idx]].price);
+    if (sortMode==='price-desc') list.sort((a,b) => b.sizes[selectedSize[b._idx]].price - a.sizes[selectedSize[a._idx]].price);
+    if (sortMode==='name-asc')   list.sort((a,b) => a.name.localeCompare(b.name));
+    return list;
+  }
+
+  function renderGrid() {
+    const grid = document.getElementById('productGrid');
+    const list = getFiltered();
+    document.getElementById('resultCount').textContent = `${list.length} product${list.length!==1?'s':''} found`;
+    if (!list.length) { grid.innerHTML=`<div class="empty-state"><div class="icon">✿</div><p>Walang produktong nahanap.</p></div>`; return; }
+    grid.innerHTML = list.map(p => {
+      const idx=p._idx, selIdx=selectedSize[idx], size=p.sizes[selIdx];
+      const sizeBtns = p.sizes.map((s, si) => {
+  let lbl = '';
+
+  if (p.cat === 'liquid') {
+    if (s.grams >= 1000) {
+      const liters = s.grams / 1000;
+      lbl = Number.isInteger(liters) ? liters + 'L' : liters.toFixed(1) + 'L';
+    } else {
+      lbl = s.grams + 'ml';
+    }
+  } else {
+    if (s.grams >= 1000) {
+      const kgs = s.grams / 1000;
+      lbl = Number.isInteger(kgs) ? kgs + 'kg' : kgs.toFixed(1) + 'kg';
+    } else {
+      lbl = s.grams + 'g';
+    }
+  }
+
+  return `<button class="size-btn ${si===selIdx?'active':''}" onclick="selectSize(${idx},${si})">${lbl}</button>`;
+}).join('');
+      return `
+      <div class="product-card" id="card-${idx}">
+       <div class="card-img">
+  <img id="img-${idx}" 
+       src="${p.sizes[selIdx].img || p.img}" 
+       alt="${p.name}" 
+       onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+          <div class="card-img-fallback">✿</div>
+          ${size.badge?`<span class="card-badge ${size.badge}">${size.badgeLbl}</span>`:''}
+        </div>
+        <div class="card-body">
+          <span class="card-cat">${p.cat}</span>
+          <span class="card-name">${p.name}</span>
+          <span class="card-desc">${p.desc}</span>
+          <span class="card-scent">✿ ${p.scent}</span>
+          <div class="size-selector">${sizeBtns}</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-price" id="price-${idx}">₱${size.price.toFixed(2)}</span>
+          <button class="add-btn" id="addbtn-${idx}" onclick="addToCart(${idx},this)">+ Add</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function selectSize(productIdx, sizeIdx) {
+  selectedSize[productIdx] = sizeIdx;
+  
+  const p = PRODUCTS[productIdx];
+  const size = p.sizes[sizeIdx];
+  
+
+  const priceEl = document.getElementById(`price-${productIdx}`);
+  if (priceEl) priceEl.textContent = `₱${size.price.toFixed(2)}`;
+
+
+  const imgEl = document.getElementById(`img-${productIdx}`);
+  if (imgEl) {
+    imgEl.src = size.img || p.img;
+  }
+
+ 
+  const card = document.getElementById(`card-${productIdx}`);
+  if (card) {
+    card.querySelectorAll('.size-btn').forEach((btn, i) => {
+      btn.classList.toggle('active', i === sizeIdx);
+    });
+
+    const badgeEl = card.querySelector('.card-badge');
+    if (size.badge) {
+      if (badgeEl) {
+        badgeEl.className = `card-badge ${size.badge}`;
+        badgeEl.textContent = size.badgeLbl;
+      } else {
+        const nb = document.createElement('span');
+        nb.className = `card-badge ${size.badge}`;
+        nb.textContent = size.badgeLbl;
+        card.querySelector('.card-img').appendChild(nb);
+      }
+    } else if (badgeEl) {
+      badgeEl.remove();
+    }
+  }
+}
+
+  function addToCart(productIdx, btn) {
+    const p=PRODUCTS[productIdx], sizeIdx=selectedSize[productIdx], size=p.sizes[sizeIdx], cartId=`${productIdx}-${sizeIdx}`;
+    const existing = cart.find(c => c.cartId===cartId);
+    if (existing) existing.qty++;
+    else cart.push({cartId, id:size.id, name:p.name, variant:size.variant, scent:p.scent, img:p.img, price:size.price, qty:1});
+    btn.textContent='✓ Added'; btn.classList.add('added');
+    setTimeout(() => { btn.textContent='+ Add'; btn.classList.remove('added'); }, 1200);
+    updateCartUI();
+    showToast(`${p.name} ${size.variant} added to cart`);
+  }
+
+  function updateCartUI() {
+    document.getElementById('cartCount').textContent = cart.reduce((s,c)=>s+c.qty,0);
+    document.getElementById('subtotalVal').textContent = `₱${cart.reduce((s,c)=>s+c.price*c.qty,0).toFixed(2)}`;
+    document.getElementById('orderBtn').disabled = cart.length===0;
+    renderDrawerItems();
+  }
+
+  function renderDrawerItems() {
+    const el = document.getElementById('drawerItems');
+    if (!cart.length) { el.innerHTML=`<p class="cart-empty-msg">Your cart is empty.<br><em>Magdagdag ng produkto</em></p>`; return; }
+    el.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <div class="ci-icon"><img src="${item.img}" alt="${item.name}" onerror="this.style.display='none'" /></div>
+        <div class="ci-info">
+          <div class="ci-name">${item.name}</div>
+          <div class="ci-cat">${item.variant}</div>
+          <div class="ci-qty">
+            <button class="qty-btn" onclick="changeQty('${item.cartId}',-1)">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty('${item.cartId}',1)">+</button>
+            <button class="ci-remove" onclick="removeItem('${item.cartId}')">Remove</button>
+          </div>
+        </div>
+        <div class="ci-price">₱${(item.price*item.qty).toFixed(2)}</div>
+      </div>`).join('');
+  }
+
+  function changeQty(cartId, delta) {
+    const item = cart.find(c=>c.cartId===cartId);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty<=0) cart = cart.filter(c=>c.cartId!==cartId);
+    updateCartUI();
+  }
+
+  function removeItem(cartId) { cart=cart.filter(c=>c.cartId!==cartId); updateCartUI(); }
+
+  function openDrawer()  { document.getElementById('drawer').classList.add('open'); document.getElementById('overlay').classList.add('open'); }
+  function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+
+  document.getElementById('cartBtn').onclick    = openDrawer;
+  document.getElementById('drawerClose').onclick = closeDrawer;
+  document.getElementById('overlay').onclick    = closeDrawer;
+
+  document.getElementById('orderBtn').onclick = () => {
+    closeDrawer();
+    const subtotal = cart.reduce((s,c)=>s+c.price*c.qty,0);
+    document.getElementById('orderSummary').innerHTML =
+      cart.map(c=>`<div class="order-summary-row"><span>${c.name} ${c.variant} × ${c.qty}</span><span>₱${(c.price*c.qty).toFixed(2)}</span></div>`).join('') +
+      `<div class="order-summary-row total"><span>Total</span><span>₱${subtotal.toFixed(2)}</span></div>`;
+    document.getElementById('successView').classList.remove('show');
+    document.getElementById('formView').style.display='block';
+    document.getElementById('modalOverlay').classList.add('open');
+  };
+
+  document.getElementById('modalClose').onclick = () => document.getElementById('modalOverlay').classList.remove('open');
+  document.getElementById('modalOverlay').onclick = e => { if(e.target===document.getElementById('modalOverlay')) document.getElementById('modalOverlay').classList.remove('open'); };
+
+  document.getElementById('placeBtn').onclick = async () => {
+    const fname=document.getElementById('fname').value.trim();
+    const lname=document.getElementById('lname').value.trim();
+    const phone=document.getElementById('phone').value.trim();
+    const address=document.getElementById('address').value.trim();
+    const payment=document.getElementById('payment').value;
+    if (!fname||!lname||!phone||!address) { showToast('Please fill in all fields'); return; }
+    const items=cart.map(c=>`${c.name} ${c.variant} x${c.qty}`).join(', ');
+    const total=cart.reduce((s,c)=>s+c.price*c.qty,0).toFixed(2);
+    const res=await fetch('/submit-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({firstName:fname,lastName:lname,phone,address,payment,items,total})});
+    const result=await res.json();
+    document.getElementById('formView').style.display='none';
+    document.getElementById('successView').classList.add('show');
+    document.getElementById('orderId').textContent=`Order ID: ${result.orderId}`;
+
+
+document.getElementById('fname').value = '';
+document.getElementById('lname').value = '';
+document.getElementById('phone').value = '';
+document.getElementById('address').value = '';
+document.getElementById('payment').selectedIndex = 0;
+
+
+cart = [];
+updateCartUI();
+    cart=[]; updateCartUI();
+  };
+
+  document.getElementById('searchInput').addEventListener('input', e => { searchTerm=e.target.value.toLowerCase(); renderGrid(); });
+  document.getElementById('filterGroup').addEventListener('click', e => {
+    if (!e.target.classList.contains('filter-btn')) return;
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    activeFilter=e.target.dataset.cat;
+    renderGrid();
+  });
+  document.getElementById('sortSelect').addEventListener('change', e => { sortMode=e.target.value; renderGrid(); });
+
+  function showToast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2400); }
+
+  renderGrid();
+  updateCartUI();
+</script>
+</body>
+</html>

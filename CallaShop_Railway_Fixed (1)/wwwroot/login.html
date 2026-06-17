@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calla Admin Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: #1a0a10;
+      font-family: 'Jost', sans-serif;
+      color: white;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .box {
+      background: rgba(10,2,8,0.7);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      width: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    h1 { font-size: 1.8rem; font-weight: 300; color: #e8607a; text-align: center; }
+    p  { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); text-align: center; }
+    input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem;
+      color: white;
+      outline: none;
+    }
+    input:focus { border-color: #e8607a; }
+    button {
+      width: 100%;
+      background: #e8607a;
+      color: white;
+      border: none;
+      padding: 13px;
+      border-radius: 30px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #d44f68; }
+    .error { color: #e8607a; font-size: 0.75rem; text-align: center; display: none; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>✿ Calla</h1>
+    <p>Admin Access</p>
+    <input type="text" id="user" placeholder="Username" />
+    <input type="password" id="pass" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <span class="error" id="err">Invalid credentials</span>
+  </div>
+  <script>
+    async function login() {
+  const u = document.getElementById('user').value.trim();
+  const p = document.getElementById('pass').value.trim();
+
+  const res = await fetch('/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: u, password: p })
+  });
+
+  const result = await res.json();
+  if (result.success) {
+    window.location.href = '/admin';
+  } else {
+    document.getElementById('err').style.display = 'block';
+  }
+}
+  </script>
+</body>
+</html>

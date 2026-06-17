@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+  <title>Calla — Media</title>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --pink:       #e8607a;
+      --pink-light: #f2a0b0;
+      --cream:      #fdf6f0;
+      --dark:       #1a0a10;
+      --text:       #2c1a20;
+      --muted:      rgba(44,26,32,0.55);
+      --border:     rgba(0,0,0,0.09);
+      --white:      #ffffff;
+      --font-d: 'Cormorant Garamond', Georgia, serif;
+      --font-b: 'Jost', sans-serif;
+    }
+    body { font-family:var(--font-b); background:var(--cream); color:var(--text); min-height:100vh; }
+
+    nav { background:var(--white); border-bottom:1px solid var(--border); padding:0 6%; display:flex; align-items:center; justify-content:space-between; height:70px; position:sticky; top:0; z-index:99; }
+    .logo-name { font-family:var(--font-d); font-weight:600; font-size:22px; letter-spacing:4px; color:var(--pink); text-decoration:none; font-style:italic; }
+    .nav-links { display:flex; list-style:none; gap:2.5rem; }
+    .nav-links a { text-decoration:none; font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:var(--text); opacity:0.6; transition:opacity .2s; }
+    .nav-links a:hover, .nav-links a.active { opacity:1; }
+
+.page-header{
+  position:relative;
+
+  height:540px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+
+  overflow:hidden;
+
+  color:white;
+}
+.page-header video{
+  position:absolute;
+
+  top:0;
+  left:0;
+
+  width:100%;
+  height:100%;
+
+  object-fit:cover;
+}
+.page-header::before{
+  content:'';
+
+  position:absolute;
+  inset:0;
+
+  background:
+  linear-gradient(
+    rgba(20,10,15,.45),
+    rgba(20,10,15,.55)
+  );
+
+  z-index:1;
+}
+.page-header h1,
+.page-header p{
+  position:relative;
+  z-index:2;
+}
+.hero-video{
+  position:absolute;
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  object-fit:cover;
+
+  z-index:0;
+}
+.page-header::before{
+  content:'';
+  position:absolute;
+  inset:0;
+
+  background:
+  linear-gradient(
+    rgba(232,96,122,.15),
+    rgba(20,0,10,.35)
+  );
+
+  z-index:1;
+}
+.page-header h1,
+.page-header p{
+  position:relative;
+  z-index:2;
+}
+
+.page-header h1{
+  font-family:var(--font-d);
+  font-size:clamp(4rem,8vw,6rem);
+  font-weight:300;
+  color:white;
+  margin-bottom:10px;
+}
+
+.page-header p{
+  color:white;
+  opacity:.95;
+  font-size:1.2rem;
+}
+.media-intro{
+  padding:50px 6%;
+  text-align:center;
+}
+
+.media-intro p{
+  max-width:700px;
+  margin:auto;
+
+  font-size:18px;
+  line-height:1.8;
+
+  color:var(--muted);
+}
+.page-header::before{
+  content:'';
+  position:absolute;
+  inset:0;
+
+  background:
+  linear-gradient(
+    rgba(232,96,122,.20),
+    rgba(20,0,10,.30)
+  );
+
+  z-index:1;
+}
+.page-header h1,
+.page-header p{
+  position:relative;
+  z-index:2;
+}
+.page-header h1{
+  font-size:clamp(4rem,8vw,6rem);
+
+  font-weight:300;
+
+  letter-spacing:1px;
+
+  margin-bottom:15px;
+}
+.page-header p{
+  font-size:1.35rem;
+
+  max-width:700px;
+
+  opacity:.95;
+}
+.page-header-content{
+  position:relative;
+  z-index:2;
+  text-align:center;
+  color:white;
+}
+.media-intro{
+  text-align:center;
+  padding:50px 6% 25px;
+}
+
+.media-intro p{
+  max-width:700px;
+  margin:auto;
+
+  color:var(--muted);
+
+  font-size:18px;
+  line-height:1.8;
+}
+.play-btn{
+  position:absolute;
+
+  top:50%;
+  left:50%;
+
+  transform:translate(-50%,-50%);
+
+  width:72px;
+  height:72px;
+
+  border-radius:50%;
+
+  background:rgba(255,255,255,.92);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:24px;
+  color:var(--pink);
+
+  transition:.3s ease;
+}
+
+    .media-body { padding:60px 6% 100px; }
+    .media-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+  gap:40px;
+}
+
+    .media-card { background:var(--white); border-radius:20px; overflow:hidden; box-shadow:0 5px 25px rgba(0,0,0,0.07); transition:all .4s; }
+    .media-card:hover { transform:translateY(-10px); box-shadow:0 20px 40px rgba(232,96,122,0.18); }
+
+    .media-img { height:240px; position:relative; overflow:hidden; background:#f5e8e8; }
+    .media-img img { width:100%; height:100%; object-fit:cover; transition:transform .5s; }
+    .media-card:hover{
+  transform:
+    translateY(-12px)
+    scale(1.02);
+
+  box-shadow:
+    0 25px 50px rgba(232,96,122,.18);
+}
+
+    .media-type { position:absolute; top:15px; right:15px; background:rgba(0,0,0,0.75); color:white; font-size:10px; padding:5px 12px; border-radius:30px; letter-spacing:1px; font-weight:500; }
+
+    .media-info{
+  padding:28px;
+
+  min-height:200px;
+
+  display:flex;
+  flex-direction:column;
+}
+    .media-info h3{
+  font-family:var(--font-d);
+  font-size:1.7rem;
+  margin-bottom:12px;
+}
+    .media-info p{
+  color:var(--muted);
+  line-height:1.7;
+
+  margin-bottom:20px;
+
+  flex:1;
+}
+    .view-btn{
+  background:var(--pink);
+
+  color:white;
+
+  border:none;
+
+  padding:14px 28px;
+
+  border-radius:999px;
+
+  font-size:11px;
+
+  letter-spacing:2px;
+
+  transition:.3s ease;
+
+  width:100%;
+}
+   .view-btn:hover{
+  background:#d44f68;
+
+  transform:translateY(-2px);
+}
+.play-icon{
+  position:absolute;
+   cursor:pointer;
+
+  top:50%;
+  left:50%;
+
+  transform:translate(-50%,-50%);
+
+  width:72px;
+  height:72px;
+
+  border-radius:50%;
+
+  background:rgba(255,255,255,.92);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:30px;
+
+  color:var(--pink);
+
+  transition:.3s ease;
+
+  box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+.media-card:hover .play-icon{
+  transform:translate(-50%,-50%) scale(1.15);
+}
+.media-card{
+  background:var(--white);
+
+  border-radius:20px;
+
+  overflow:hidden;
+
+  box-shadow:0 5px 25px rgba(0,0,0,.07);
+
+  transition:.4s ease;
+
+  animation:fadeUp .8s ease both;
+}
+@keyframes fadeUp{
+
+  from{
+    opacity:0;
+    transform:translateY(40px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+  
+
+}
+.videos-title{
+  text-align:center;
+
+  font-family:var(--font-d);
+
+  font-size:3rem;
+
+  font-weight:300;
+
+  margin-bottom:40px;
+
+  color:var(--dark);
+}
+
+    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:1000; align-items:center; justify-content:center; padding:20px; }
+    .modal-content { max-width:1000px; width:100%; background:white; border-radius:16px; overflow:hidden; position:relative; max-height:90vh; }
+    .modal-close { position:absolute; top:15px; right:20px; font-size:32px; color:#222; background:none; border:none; cursor:pointer; z-index:10; }
+
+    footer { background:#110508; padding:50px 6%; text-align:center; color:rgba(255,255,255,0.5); font-size:0.95rem; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo-name">✿ Calla</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Products</a></li>
+    <li><a href="media.html">Media</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
+    <li><a href="contact.html">Contact Us</a></li>
+</ul>
+  </nav>
+
+<div class="page-header">
+
+  <video autoplay muted loop playsinline class="hero-video">
+    <source src="./assets/images/vid1.mp4" type="video/mp4">
+  </video>
+
+  <h1>Our Moments</h1>
+  <p>Watch how Calla brings joy and freshness to every family.</p>
+
+</div>
+<section class="media-intro">
+    <p>
+    Explore Calla's latest commercials, family stories,
+    and moments of freshness.
+  </p>
+</section>
+  <div class="media-body">
+    <h2 class="videos-title">
+  Featured Videos
+</h2>
+    <div class="media-grid" id="mediaGrid"></div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="mediaModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <footer>
+    © 2026 Calla Detergent. All rights reserved.
+  </footer>
+
+<script>
+    const mediaItems = [
+    {
+        type: "video",
+        title: "Calla Brand Story",
+        desc: "How Calla brings love and freshness to Filipino homes.",
+        thumbnail: "./assets/images/img3-3.jpg",
+        videoUrl: "https://www.youtube.com/embed/UTDjLmQNn3"
+      },
+      {
+        type: "video",
+        title: "Calla Liquid Detergent TVC",
+        desc: "Vibrant 15-second commercial showing the power of Calla Liquid Detergent.",
+        thumbnail: "./assets/images/img7-1.jpg",
+        videoUrl: "https://www.youtube.com/embed/tFLVfF783WQ"   // Working sample video
+      },
+      {
+        type: "video",
+        title: "Calla Powder Detergent",
+        desc: "See how Calla Powder gives powerful cleaning and long-lasting freshness.",
+        thumbnail: "./assets/images/img6.jpg",
+        videoUrl: "https://www.youtube.com/embed/0-cJqNP4v0s"
+      },
+      ,
+      {
+        type: "video",
+        title: "Calla Brand Story",
+        desc: "How Calla brings love and freshness to Filipino homes.",
+        thumbnail: "./assets/images/img8.jpg",
+        videoUrl: "https://www.youtube.com/embed/5ItagGsYzVk"
+      },
+      {
+        type: "video",
+        title: "Summer Fresh Vibes",
+        desc: "Refreshing Citrus scent that makes laundry day more enjoyable.",
+        thumbnail: "./assets/images/img9-5.jpg",
+        videoUrl: "https://www.youtube.com/embed/rvDoMa5boqE"
+      },
+      {
+        type: "video",
+        title: "Calla Brand Story",
+        desc: "How Calla brings love and freshness to Filipino homes.",
+        thumbnail: "./assets/images/thumb3.jpg",
+        videoUrl: "https://www.youtube.com/embed/Cgdba9eajI8"
+      }
+    ];
+
+function renderMedia() {
+  const grid = document.getElementById('mediaGrid');
+
+  grid.innerHTML = mediaItems.map((item, i) => `
+    <div class="media-card">
+
+      <div class="media-img" onclick="openMedia(${i})">
+        <img src="${item.thumbnail}" alt="${item.title}">
+
+        <div class="play-icon">
+          ▶
+        </div>
+
+        <span class="media-type">
+          ${item.type.toUpperCase()}
+        </span>
+      </div>
+
+      <div class="media-info">
+        <h3>${item.title}</h3>
+
+        <p>${item.desc}</p>
+
+        <button class="view-btn" onclick="openMedia(${i})">
+          VIEW ${item.type.toUpperCase()}
+        </button>
+      </div>
+
+    </div>
+  `).join('');
+}
+
+    function openMedia(i) {
+      const item = mediaItems[i];
+      const modal = document.getElementById('mediaModal');
+      const body = document.getElementById('modalBody');
+
+      if (item.type === 'photo') {
+        body.innerHTML = `
+          <img src="${item.full}" style="width:100%; max-height:85vh; object-fit:contain; display:block;" alt="${item.title}">
+        `;
+      } else {
+        body.innerHTML = `
+          <div style="position:relative; padding-top:56.25%; height:0; overflow:hidden; background:#000;">
+            <iframe style="position:absolute; top:0; left:0; width:100%; height:100%;" 
+                    src="${item.videoUrl}" 
+                    title="${item.title}" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen></iframe>
+          </div>`;
+      }
+      modal.style.display = "flex";
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('mediaModal');
+      modal.style.display = "none";
+      document.getElementById('modalBody').innerHTML = '';
+    }
+
+    // Click outside to close
+    document.getElementById('mediaModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    // Keyboard escape support
+    document.addEventListener('keydown', function(e) {
+      if (e.key === "Escape") closeModal();
+    });
+
+    renderMedia();
+  </script>
+</body>
+</html>

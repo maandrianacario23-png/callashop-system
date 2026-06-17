@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CallaShop Feedback</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{--pink:#e8607a;--pink-dark:#d44f68;}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Jost',sans-serif;background:linear-gradient(135deg,#fff0f5,#ffe4ec);}
+nav{background:rgba(255,255,255,.96);padding:0 6%;height:80px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+.logo-name{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--pink);font-style:italic;}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{text-decoration:none;color:#333}
+.hero{text-align:center;padding:60px 20px}
+.hero p{font-size:14px;color:#777;margin-top:8px; font-style:italic;}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;max-width:1100px;margin:auto;padding:20px;}
+.card,.panel,.review{background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-radius:18px;padding:20px;box-shadow:0 10px 25px rgba(0,0,0,.08);}
+.panel{max-width:1100px;margin:20px auto}
+input,textarea,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:10px;}
+button{background:var(--pink);color:white;border:none;padding:12px 18px;border-radius:10px;cursor:pointer;font-weight:500;}
+button:hover{background:var(--pink-dark);}
+.review{margin-bottom:15px}
+.badge{background:var(--pink);color:white;padding:4px 10px;border-radius:20px;font-size:12px;}
+.tools{display:flex;gap:10px;margin-bottom:15px}
+</style>
+</head>
+<body>
+
+<nav>
+<a class="logo-name">✿ Calla</a>
+<ul class="nav-links">
+<li><a href="index.html">Home</a></li>
+<li><a href="shop.html">Products</a></li>
+<li><a href="media.html">Media</a></li>
+<li><a href="feedback.html">Feedback</a></li>
+<li><a href="contact.html">Contact</a></li>
+</ul>
+</nav>
+
+<section class="hero">
+<h1>Customer Stories & Feedback 💖</h1>
+<p>Real Stories from Our Lovely Customers</p>
+</section>
+
+<div class="stats">
+<div class="card"><h2 id="totalReviews">0</h2><p>Total Reviews</p></div>
+<div class="card"><h2 id="avgRating">0.0★</h2><p>Average Rating</p></div>
+<div class="card"><h2 id="fiveStar">0</h2><p>5-Star Reviews</p></div>
+</div>
+
+<div class="panel">
+<h2>Submit Feedback</h2>
+<form id="feedbackForm">
+<input id="name" placeholder="Name" required>
+<input id="email" type="email" placeholder="Email" required>
+<select id="rating" required>
+<option value="">Select Rating</option>
+<option value="5">★★★★★</option>
+<option value="4">★★★★</option>
+<option value="3">★★★</option>
+<option value="2">★★</option>
+<option value="1">★</option>
+</select>
+<textarea id="message" rows="4" placeholder="Write your feedback here..." required></textarea>
+<button type="submit">Submit Feedback</button>
+</form>
+</div>
+
+<div class="panel">
+<div class="tools">
+<input id="search" placeholder="Search reviews...">
+<select id="sort">
+<option value="new">Newest</option>
+<option value="high">Highest Rating</option>
+</select>
+</div>
+<div id="reviews"></div>
+</div>
+
+<script>
+let allReviews = [];
+
+async function loadReviews() {
+    try {
+        const res = await fetch('/get-feedbacks');
+        allReviews = await res.json();
+        render();
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+function render() {
+    let data = [...allReviews];
+    const q = document.getElementById('search').value.toLowerCase();
+
+    if (q) {
+        data = data.filter(r => 
+            (r.name || '').toLowerCase().includes(q) || 
+            (r.message || '').toLowerCase().includes(q)
+        );
+    }
+
+    const sortMode = document.getElementById('sort').value;
+    if (sortMode === 'high' || data.length > 10) {
+        data.sort((a, b) => b.rating - a.rating);
+    } else {
+        data.reverse();
+    }
+
+    let displayData = data.length > 10 ? data.slice(0, 10) : data;
+
+    document.getElementById('reviews').innerHTML = displayData.map(r => `
+        <div class="review">
+            <span class="badge">Verified Customer</span>
+            <h3>${r.name}</h3>
+            <div>${'★'.repeat(r.rating)}</div>
+            <p>${r.message || ''}</p>
+            <small>${r.created_at || ''}</small>
+        </div>
+    `).join('');
+
+    const total = allReviews.length;
+    const avg = total ? allReviews.reduce((a, b) => a + Number(b.rating), 0) / total : 0;
+    
+    document.getElementById('totalReviews').textContent = total;
+    document.getElementById('avgRating').textContent = avg.toFixed(1) + '★';
+    document.getElementById('fiveStar').textContent = allReviews.filter(x => Number(x.rating) === 5).length;
+}
+
+function showToast(message, type = "success") {
+    const toast = document.createElement("div");
+    toast.style.position = "fixed";
+    toast.style.top = "20px";
+    toast.style.left = "50%";
+    toast.style.transform = "translateX(-50%)";
+    toast.style.background = type === "success" ? "#10b981" : "#ef4444";
+    toast.style.color = "white";
+    toast.style.padding = "14px 24px";
+    toast.style.borderRadius = "8px";
+    toast.style.boxShadow = "0 10px 15px rgba(0,0,0,0.2)";
+    toast.style.zIndex = "1000";
+    toast.style.fontWeight = "500";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.style.opacity = "1", 10);
+    setTimeout(() => {
+        toast.style.opacity = "0";
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+document.getElementById("feedbackForm").onsubmit = async function(e) {
+    e.preventDefault();
+
+    const data = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        rating: document.getElementById("rating").value,
+        message: document.getElementById("message").value.trim()
+    };
+
+    if (!data.name || !data.email || !data.rating || !data.message) {
+        showToast("Please fill all fields.", "error");
+        return;
+    }
+
+    try {
+        const res = await fetch("/submit-feedback", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(data)
+        });
+
+        if ((await res.json()).success) {
+            showToast("✅ Thank you! Your feedback has been submitted.");
+            document.getElementById("feedbackForm").reset();
+            loadReviews();
+        }
+    } catch (err) {
+        showToast("Connection error. Please try again.", "error");
+    }
+};
+
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('sort').addEventListener('change', render);
+
+loadReviews();
+</script>
+
+</body>
+</html>
